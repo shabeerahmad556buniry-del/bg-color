@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Random Color · Pure Background Changer</title>
+  <style>
+    /* minimal reset & centering */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #2c3e50; /* initial fallback, will be overridden by JS */
+      font-family: system-ui, 'Segoe UI', 'Fira Mono', 'Inter', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease-out;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    /* simple container — no card, just flexible stacking */
+    .center-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    /* color code display: clean, readable, modern */
+    .color-code {
+      font-size: 2.7rem;
+      font-weight: 700;
+      font-family: 'Fira Mono', 'JetBrains Mono', 'Cascadia Code', monospace;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      color: white;
+      padding: 0.65rem 1.5rem;
+      border-radius: 60px;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.1s ease;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* big button — only functional element */
+    .random-btn {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      border: none;
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 600;
+      padding: 1rem 2.4rem;
+      border-radius: 80px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .random-btn:hover {
+      background: rgba(0, 0, 0, 0.85);
+      transform: scale(1.02);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .random-btn:active {
+      transform: scale(0.97);
+      transition: 0.05s linear;
+    }
+
+    /* optional subtle focus ring for accessibility */
+    .random-btn:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    /* icon inside button — playful */
+    .btn-icon {
+      font-size: 1.7rem;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    }
+
+    /* small note: completely optional but no extra card or text */
+    @media (max-width: 500px) {
+      .color-code {
+        font-size: 1.8rem;
+        padding: 0.5rem 1.2rem;
+      }
+      .random-btn {
+        font-size: 1.3rem;
+        padding: 0.8rem 1.8rem;
+      }
+      .btn-icon {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="center-stack">
+  <!-- only the color code display -->
+  <div class="color-code" id="colorDisplay">#2C3E50</div>
+  
+  <!-- only the button that changes background + color code -->
+  <button class="random-btn" id="randomizeBtn">
+    <span class="btn-icon">🎲</span>
+    <span>Click me</span>
+    <span class="btn-icon">🎨</span>
+  </button>
+</div>
+
+<script>
+  (function() {
+    // DOM elements
+    const bodyEl = document.body;
+    const colorDisplaySpan = document.getElementById('colorDisplay');
+    const changeBtn = document.getElementById('randomizeBtn');
+
+    /**
+     * Generate random hex color (#RRGGBB)
+     * ensures always 6 characters after '#'
+     */
+    function getRandomHexColor() {
+      const randomVal = Math.floor(Math.random() * 0xffffff);
+      const hexString = randomVal.toString(16).padStart(6, '0');
+      return `#${hexString}`;
+    }
+
+    /**
+     * Apply new random background & update displayed color code
+     */
+    function updateBackgroundAndColor() {
+      const newColor = getRandomHexColor();
+      bodyEl.style.backgroundColor = newColor;
+      colorDisplaySpan.textContent = newColor;
+      
+      // tiny micro animation on code (just for fun, no extra ui)
+      colorDisplaySpan.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        colorDisplaySpan.style.transform = '';
+      }, 120);
+    }
+
+    // event listeners for the button
+    if (changeBtn) {
+      changeBtn.addEventListener('click', updateBackgroundAndColor);
+      changeBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          updateBackgroundAndColor();
+        }
+      });
+    }
+
+    // set initial random background & color (so it's not static)
+    // but also meets requirement: click changes background randomly each time.
+    // On load provides instant variety.
+    updateBackgroundAndColor();
+  })();
+</script>
+</body>
+</html>

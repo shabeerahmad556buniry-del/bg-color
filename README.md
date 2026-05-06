@@ -1,1 +1,2 @@
 # bg-color
+A counter app is a simple tool that helps you increase or decrease a number with button clicks to track things like scores, tasks, or counts easily. It often includes reset and sometimes save features for better control.
